@@ -48,7 +48,7 @@
         android:id="@+id/registerQn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Don't have an account, signUp"
+        android:text="Have an account, Login"
         android:gravity="center"/>
 
 </LinearLayout>
