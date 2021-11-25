@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "296581288881",
+    "project_id": "budgetting-app-a5f00",
+    "storage_bucket": "budgetting-app-a5f00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296581288881:android:2aee0fe95dcf613925a390",
+        "android_client_info": {
+          "package_name": "pl.patryk.personalbudgetingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "296581288881-p7p47o35eh4a3o26ebmomd0405omu0kr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.patryk.personalbudgetingapp",
+            "certificate_hash": "c2a70415b25a8ae8e8fe1f64042e64c5600fd75a"
+          }
+        },
+        {
+          "client_id": "296581288881-u6iugg1cikrlodd29642uh9atdhccfol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk9dNN6fxw5NFJBrrIHi4aNphWUlNMwzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "296581288881-u6iugg1cikrlodd29642uh9atdhccfol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
