@@ -255,13 +255,14 @@ public class BudgetActivity extends AppCompatActivity {
 
         View mView;
         public ImageView imageView;
-        public TextView notes;
+        public TextView notes, date;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
             imageView = itemView.findViewById(R.id.imageView);
             notes = itemView.findViewById(R.id.note);
+            date = itemView.findViewById(R.id.date);
         }
 
         public void setItemName(String itemName){
@@ -275,7 +276,7 @@ public class BudgetActivity extends AppCompatActivity {
         }
         public void setDate(String itemDate){
             TextView item = mView.findViewById(R.id.date);
-            item.setText(itemDate);
+            date.setText(itemDate);
         }
     }
     private void updateData(){
