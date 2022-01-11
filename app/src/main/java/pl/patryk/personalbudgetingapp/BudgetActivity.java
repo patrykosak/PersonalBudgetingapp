@@ -3,6 +3,8 @@ package pl.patryk.personalbudgetingapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,17 +13,26 @@ import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.DateTime;
 import org.joda.time.Months;
@@ -32,6 +43,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class BudgetActivity extends AppCompatActivity {
+
+    private TextView totalBudgetAmountTextView;
+    private RecyclerView recyclerView;
 
     private FloatingActionButton fab;
 
@@ -47,6 +61,33 @@ public class BudgetActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         budgetRef = FirebaseDatabase.getInstance().getReference().child("budget").child(mAuth.getCurrentUser().getUid());
         loader = new ProgressDialog(this);
+
+        totalBudgetAmountTextView = findViewById(R.id.totalBudgetAmountTextView);
+        recyclerView = findViewById(R.id.recyclerView);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        budgetRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+             int totalAmount = 0;
+             for(DataSnapshot snap: snapshot.getChildren()){
+                 Data data = snap.getValue(Data.class);
+                 totalAmount += data.getAmount();
+                 String sTotal = String.valueOf("Month budget: $"+ totalAmount);
+                 totalBudgetAmountTextView.setText(sTotal);
+             }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         fab = findViewById(R.id.fab);
 
@@ -84,7 +125,7 @@ public class BudgetActivity extends AppCompatActivity {
                     return;
                 }
 
-                if(budgetItem.equals("Select Item")){
+                if(budgetItem.equals("Select item")){
                     Toast.makeText(BudgetActivity.this,"Select a valid item", Toast.LENGTH_SHORT).show();
                 }
 
@@ -130,4 +171,97 @@ public class BudgetActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerOptions<Data> options = new FirebaseRecyclerOptions.Builder<Data>()
+                .setQuery(budgetRef, Data.class)
+                .build();
+
+        FirebaseRecyclerAdapter<Data, MyViewHolder> adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Data model) {
+                holder.setItemAmount("Allocated amount: $"+ model.getAmount());
+                holder.setDate("On: "+model.getDate());
+                holder.setItemName("BudgetItem "+model.getItem());
+
+                holder.notes.setVisibility(View.GONE);
+
+                switch (model.getItem()){
+                    case "Transport":
+                        holder.imageView.setImageResource(R.drawable.ic_transport);
+                        break;
+                    case "Food":
+                        holder.imageView.setImageResource(R.drawable.ic_food);
+                        break;
+                    case "House":
+                        holder.imageView.setImageResource(R.drawable.ic_house);
+                        break;
+                    case "Entertainment":
+                        holder.imageView.setImageResource(R.drawable.ic_entertainment);
+                        break;
+                    case "Education":
+                        holder.imageView.setImageResource(R.drawable.ic_education);
+                        break;
+                    case "Charity":
+                        holder.imageView.setImageResource(R.drawable.ic_consultancy);
+                        break;
+                    case "Apparel":
+                        holder.imageView.setImageResource(R.drawable.ic_shirt);
+                        break;
+                    case "Health":
+                        holder.imageView.setImageResource(R.drawable.ic_health);
+                        break;
+                    case "Personal":
+                        holder.imageView.setImageResource(R.drawable.ic_personalcare);
+                        break;
+                    case "Other":
+                        holder.imageView.setImageResource(R.drawable.ic_other);
+                        break;
+                }
+            }
+
+            @NonNull
+            @Override
+            public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.retrieve_layout, parent, false);
+                return new MyViewHolder(view);
+            }
+        };
+
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+        adapter.notifyDataSetChanged();
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder{
+
+        View mView;
+        public ImageView imageView;
+        public TextView notes;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mView = itemView;
+            imageView = itemView.findViewById(R.id.imageView);
+            notes = itemView.findViewById(R.id.note);
+        }
+
+        public void setItemName(String itemName){
+            TextView item = mView.findViewById(R.id.item);
+            item.setText(itemName);
+        }
+
+        public void setItemAmount(String itemAmount){
+            TextView item = mView.findViewById(R.id.amount);
+            item.setText(itemAmount);
+        }
+        public void setDate(String itemDate){
+            TextView item = mView.findViewById(R.id.date);
+            item.setText(itemDate);
+        }
+    }
+
 }
