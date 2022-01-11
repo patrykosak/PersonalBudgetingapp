@@ -10,7 +10,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CardView budgetCardView;
+    private CardView budgetCardView, todayCardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +18,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         budgetCardView = findViewById(R.id.budgetCardView);
+        todayCardView = findViewById(R.id.todayCardView);
+
         budgetCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, BudgetActivity.class);
                 startActivity(intent);
-                finish();
+            }
+        });
+
+        todayCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TodaySpendingActivity.class);
+                startActivity(intent);
             }
         });
 
