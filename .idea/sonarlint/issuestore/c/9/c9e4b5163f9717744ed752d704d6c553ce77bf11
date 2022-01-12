@@ -1,0 +1,17 @@
+
+u
+java:S1450"ZRemove the "registerBtn" field and declare it as a local variable in the relevant methods.(ğØÏ”ıÿÿÿÿ
+o
+java:S1450"YRemove the "registerQn" field and declare it as a local variable in the relevant methods.(ØçÆÌ
+Q
+java:S1874"6Remove this use of "ProgressDialog"; it is deprecated.(·á…Çùÿÿÿÿ
+Q
+java:S1874+"6Remove this use of "ProgressDialog"; it is deprecated.(¿Ú•ğúÿÿÿÿ
+H
+java:S1874A"2Remove this use of "setMessage"; it is deprecated.(¸£ƒ˜
+C
+java:S1604-"(Make this anonymous inner class a lambda(ı­É‡üÿÿÿÿ
+>
+java:S1604E"(Make this anonymous inner class a lambda(Ûê‰á
+C
+java:S16045"(Make this anonymous inner class a lambda(óÁÀøÿÿÿÿ

@@ -1,0 +1,15 @@
+
+g
+java:S3008"QRename this field "SPLASH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(£Èµô
+q
+java:S1450"VRemove the "appName" field and declare it as a local variable in the relevant methods.(ÀÖëµûÿÿÿÿ
+n
+java:S1450"XRemove the "imageView" field and declare it as a local variable in the relevant methods.(øû¯
+S
+java:S1874"7Remove this use of "FLAG_FULLSCREEN"; it is deprecated.(±ùËD8ÀñŸÕ/
+S
+java:S1874"7Remove this use of "FLAG_FULLSCREEN"; it is deprecated.(±ùËD8™òñŸÕ/
+E
+java:S1874#"/Remove this use of "Handler"; it is deprecated.(„ÑñŒ
+>
+java:S1604#"(Make this anonymous inner class a lambda(„ÑñŒ
