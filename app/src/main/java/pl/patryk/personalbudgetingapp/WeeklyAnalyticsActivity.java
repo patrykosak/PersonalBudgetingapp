@@ -229,7 +229,7 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
         DateTime now = new DateTime();
         Weeks weeks = Weeks.weeksBetween(epoch, now);
 
-        String itemNweek = "House Expenses"+weeks.getWeeks();
+        String itemNweek = "House"+weeks.getWeeks();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
         Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
