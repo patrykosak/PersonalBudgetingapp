@@ -18,7 +18,7 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
     private CardView todayCardView, weekCardView, monthCardView;
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
-    private boolean isAccelerometerSensorAvailable, itIsNotFirstTime=false;
+    private boolean isAccelerometerSensorAvailable, firstTime=true;
     //private SensorEventListener sensorEventListener;
     private float acelVal, acelLast, shake;
 
@@ -86,9 +86,11 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
             float delta = acelVal - acelLast;
             shake = shake*0.9f + delta;
             if(shake > 0.01){
-                Intent intent = new Intent(ChooseAnalyticActivity.this, VideoActivity.class);
-                startActivity(intent);
-
+                if(firstTime) {
+                    Intent intent = new Intent(ChooseAnalyticActivity.this, VideoActivity.class);
+                    startActivity(intent);
+                    firstTime=false;
+                }
             }
 
 
