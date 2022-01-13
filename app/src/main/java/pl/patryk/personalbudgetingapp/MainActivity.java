@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         historyCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                Intent intent = new Intent(MainActivity.this, VideoActivity.class);
                 startActivity(intent);
             }
         });
