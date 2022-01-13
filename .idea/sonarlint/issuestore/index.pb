@@ -1,3 +1,21 @@
 
 H
 app/google-services.json,f\d\fd8d34b142d02ec743a8efefefd2c097961666e9
+|
+Lapp/src/main/java/pl/patryk/personalbudgetingapp/DailyAnalyticsActivity.java,1\d\1d76719ed050f02862aee92190f2dfd9eff8eaed
+z
+Japp/src/main/java/pl/patryk/personalbudgetingapp/WeekSpendingActivity.java,d\d\dd905c52a37d01ddd0dcd3a34293732dd22a2831
+~
+Napp/src/main/java/pl/patryk/personalbudgetingapp/MonthlyAnalyticsActivity.java,1\d\1d2b12e18687aef7edbfa8f3d3e679c8ab1cf453
+j
+:app/src/main/java/pl/patryk/personalbudgetingapp/Data.java,c\5\c598c38bdc24b724e9b200ec9dc5a4da338433c7
+w
+Gapp/src/main/java/pl/patryk/personalbudgetingapp/TodayItemsAdapter.java,8\6\86e2dc7eceadbe4c582d81302fb4df6413b2b009
+}
+Mapp/src/main/java/pl/patryk/personalbudgetingapp/WeeklyAnalyticsActivity.java,0\2\021e3a3e1dd9c6628cddf85619e8cf133760905a
+u
+Eapp/src/main/java/pl/patryk/personalbudgetingapp/HistoryActivity.java,3\c\3c348f723c867ee28c9294ce51648fd6af1981df
+u
+Eapp/src/main/java/pl/patryk/personalbudgetingapp/AccountActivity.java,9\1\91a393ac4093c6512c2f95baf55b04fa3b88cf75
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
