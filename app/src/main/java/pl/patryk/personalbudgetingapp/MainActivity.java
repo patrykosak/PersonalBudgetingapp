@@ -41,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
-    private CardView budgetCardView, todayCardView, historyCardView;
-    private ImageView weekBtnImageView, monthBtnImageView, analyticsImageView;
+    private CardView budgetCardView, todayCardView, historyCardView, weekCardView, MonthCardView, analyticsCardView;
     private TextView weekSpendingTv, budgetTv, todaySpendingTv,remainingBudgetTv,monthSpendingTv;
 
     private FirebaseAuth mAuth;
@@ -71,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
         budgetCardView = findViewById(R.id.budgetCardView);
         todayCardView = findViewById(R.id.todayCardView);
-        weekBtnImageView = findViewById(R.id.weekBtnImageView);
-        monthBtnImageView = findViewById(R.id.monthBtnImageView);
-        analyticsImageView = findViewById(R.id.analyticsImageView);
+        weekCardView = findViewById(R.id.weekCardView);
+        MonthCardView = findViewById(R.id.MonthCardView);
+        analyticsCardView = findViewById(R.id.analyticsCardView);
         historyCardView = findViewById(R.id.historyCardView);
 
         mAuth = FirebaseAuth.getInstance();
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        weekBtnImageView.setOnClickListener(new View.OnClickListener() {
+        weekCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WeekSpendingActivity.class);
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        monthBtnImageView.setOnClickListener(new View.OnClickListener() {
+        MonthCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WeekSpendingActivity.class);
@@ -116,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        analyticsImageView.setOnClickListener(new View.OnClickListener() {
+        analyticsCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ChooseAnalyticActivity.class);
