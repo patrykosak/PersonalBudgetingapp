@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 //implements SensorEventListener
 public class ChooseAnalyticActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
     private boolean isAccelerometerSensorAvailable, firstTime=true;
     //private SensorEventListener sensorEventListener;
     private float acelVal, acelLast, shake;
+    private TextView saveInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
         weekCardView = findViewById(R.id.weekCardView);
         monthCardView = findViewById(R.id.monthCardView);
 
+        saveInfo = findViewById(R.id.saveInfo);
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -39,14 +43,13 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
         acelLast = SensorManager.GRAVITY_EARTH;
         shake = 0.00f;
 
-//        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!=null){
-//
-//
-//            isAccelerometerSensorAvailable = true;
-//        }
-//        else{
-//            //view.gone with this info
-//        }
+       if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!=null){
+
+           isAccelerometerSensorAvailable = true;
+     }
+        else{
+          saveInfo.setVisibility(View.GONE);
+      }
 
         todayCardView.setOnClickListener(new View.OnClickListener() {
             @Override
