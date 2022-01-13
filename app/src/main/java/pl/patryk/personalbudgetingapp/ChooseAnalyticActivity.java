@@ -1,6 +1,7 @@
 package pl.patryk.personalbudgetingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.content.Context;
@@ -21,6 +22,7 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
     private Sensor accelerometerSensor;
     private boolean isAccelerometerSensorAvailable, firstTime=true;
     //private SensorEventListener sensorEventListener;
+    private Toolbar toolbar;
     private float acelVal, acelLast, shake;
     private TextView saveInfo;
 
@@ -32,6 +34,10 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
         todayCardView = findViewById(R.id.todayCardView);
         weekCardView = findViewById(R.id.weekCardView);
         monthCardView = findViewById(R.id.monthCardView);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Analytics");
 
         saveInfo = findViewById(R.id.saveInfo);
 

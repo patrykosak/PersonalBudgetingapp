@@ -3,6 +3,7 @@ package pl.patryk.personalbudgetingapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -56,6 +58,8 @@ public class BudgetActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressDialog loader;
 
+    private Toolbar toolbar;
+
     private String post_key = "";
     private String item = "";
     private int amount = 0;
@@ -69,6 +73,10 @@ public class BudgetActivity extends AppCompatActivity {
         budgetRef = FirebaseDatabase.getInstance().getReference().child("budget").child(mAuth.getCurrentUser().getUid());
         personalRef = FirebaseDatabase.getInstance().getReference().child("personal").child(mAuth.getCurrentUser().getUid());
         loader = new ProgressDialog(this);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Budget");
 
         totalBudgetAmountTextView = findViewById(R.id.totalBudgetAmountTextView);
         recyclerView = findViewById(R.id.recyclerView);
