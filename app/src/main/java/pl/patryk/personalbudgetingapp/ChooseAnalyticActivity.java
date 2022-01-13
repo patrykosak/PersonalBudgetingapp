@@ -94,7 +94,7 @@ public class ChooseAnalyticActivity extends AppCompatActivity {
             acelVal = (float) Math.sqrt((double) (x*x+y*y+z*z));
             float delta = acelVal - acelLast;
             shake = shake*0.9f + delta;
-            if(shake > 0.01){
+            if(shake > 10){
                 if(firstTime) {
                     Intent intent = new Intent(ChooseAnalyticActivity.this, VideoActivity.class);
                     startActivity(intent);
