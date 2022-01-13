@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
-    private CardView budgetCardView, todayCardView;
+    private CardView budgetCardView, todayCardView, historyCardView;
     private ImageView weekBtnImageView, monthBtnImageView, analyticsImageView;
     private TextView weekSpendingTv, budgetTv, todaySpendingTv,remainingBudgetTv,monthSpendingTv;
 
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         weekBtnImageView = findViewById(R.id.weekBtnImageView);
         monthBtnImageView = findViewById(R.id.monthBtnImageView);
         analyticsImageView = findViewById(R.id.analyticsImageView);
-
+        historyCardView = findViewById(R.id.historyCardView);
 
         mAuth = FirebaseAuth.getInstance();
         onlineUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -116,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ChooseAnalyticActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        historyCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intent);
             }
         });
