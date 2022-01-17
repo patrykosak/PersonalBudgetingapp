@@ -254,7 +254,7 @@ public class BudgetActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull MyViewHolder holder, int position, @NonNull Data model) {
                 holder.setItemAmount("Allocated amount: $"+ model.getAmount());
                 holder.setDate("On: "+model.getDate());
-                holder.setItemName("BudgetItem "+model.getItem());
+                holder.setItemName("Budget item "+model.getItem());
 
                 holder.notes.setVisibility(View.GONE);
 

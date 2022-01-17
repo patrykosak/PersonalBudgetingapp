@@ -13,11 +13,5 @@ z
 Japp/src/main/java/pl/patryk/personalbudgetingapp/SplashScreenActivity.java,7\8\781f4da5c3b1d3d9604f99cddebaa95d880f4362
 w
 Gapp/src/main/java/pl/patryk/personalbudgetingapp/TodayItemsAdapter.java,8\6\86e2dc7eceadbe4c582d81302fb4df6413b2b009
-z
-Japp/src/main/java/pl/patryk/personalbudgetingapp/WeekSpendingActivity.java,d\d\dd905c52a37d01ddd0dcd3a34293732dd22a2831
 {
 Kapp/src/main/java/pl/patryk/personalbudgetingapp/TodaySpendingActivity.java,1\4\14795824eca6957947b9f7165ee946a72923a784
-}
-Mapp/src/main/java/pl/patryk/personalbudgetingapp/WeeklyAnalyticsActivity.java,0\2\021e3a3e1dd9c6628cddf85619e8cf133760905a
-t
-Dapp/src/main/java/pl/patryk/personalbudgetingapp/BudgetActivity.java,8\a\8a1a9e92b79ce6156d7b1ae83e7fc9c9df50c239

@@ -624,7 +624,7 @@ public class MonthlyAnalyticsActivity extends AppCompatActivity {
                     Pie pie = AnyChart.pie();
                     List<DataEntry> data = new ArrayList<>();
                     data.add(new ValueDataEntry("Transport", traTotal));
-                    data.add(new ValueDataEntry("House exp", houseTotal));
+                    data.add(new ValueDataEntry("House", houseTotal));
                     data.add(new ValueDataEntry("Food", foodTotal));
                     data.add(new ValueDataEntry("Entertainment", entTotal));
                     data.add(new ValueDataEntry("Education", eduTotal));
