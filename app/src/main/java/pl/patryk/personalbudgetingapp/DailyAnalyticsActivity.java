@@ -379,7 +379,7 @@ public class DailyAnalyticsActivity extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
-        String itemNday = "Apparel and Services"+date;
+        String itemNday = "Apparel"+date;
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
         Query query = reference.orderByChild("itemNday").equalTo(itemNday);
@@ -638,7 +638,7 @@ public class DailyAnalyticsActivity extends AppCompatActivity {
                     data.add(new ValueDataEntry("Apparel", appTotal));
                     data.add(new ValueDataEntry("Health", heaTotal));
                     data.add(new ValueDataEntry("Personal", perTotal));
-                    data.add(new ValueDataEntry("other", othTotal));
+                    data.add(new ValueDataEntry("Other", othTotal));
 
 
                     pie.data(data);
