@@ -16,7 +16,7 @@ The application is used to effectively manage the home budget. The user declares
 
 - Register
 - Log in
-- Manage budget
+- Manage month budget
 - View daily, weekly or monthly expenses
 - View daily, weekly or monthly analytic with graphs
 - View expenses on a specific date
