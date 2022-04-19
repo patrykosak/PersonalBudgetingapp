@@ -7,5 +7,13 @@ j
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
-z
-Japp/src/main/java/pl/patryk/personalbudgetingapp/SplashScreenActivity.java,7\8\781f4da5c3b1d3d9604f99cddebaa95d880f4362
+|
+Lapp/src/main/java/pl/patryk/personalbudgetingapp/ChooseAnalyticActivity.java,3\0\3086b385616980109f39f7537da79308457f076a
+s
+Capp/src/main/java/pl/patryk/personalbudgetingapp/LoginActivity.java,3\5\35385b817a5a1adac632f7d92d7b6fa9abb0c0de
+w
+Gapp/src/main/java/pl/patryk/personalbudgetingapp/TodayItemsAdapter.java,8\6\86e2dc7eceadbe4c582d81302fb4df6413b2b009
+s
+Capp/src/main/java/pl/patryk/personalbudgetingapp/VideoActivity.java,8\7\879b0ffb33a31a2b3548ae949d1cda9161b6573e
+{
+Kapp/src/main/java/pl/patryk/personalbudgetingapp/TodaySpendingActivity.java,1\4\14795824eca6957947b9f7165ee946a72923a784

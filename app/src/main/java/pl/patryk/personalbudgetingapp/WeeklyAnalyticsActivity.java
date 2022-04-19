@@ -41,13 +41,13 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private String onlineUserId = "";
-    private DatabaseReference expensesRef,personalRef;
+    private DatabaseReference personalRef;
 
     private TextView totalBudgetAmountTextView, analyticsTransportAmount,analyticsFoodAmount,analyticsHouseExpensesAmount,analyticsEntertainmentAmount;
     private TextView analyticsEducationAmount,analyticsCharityAmount,analyticsApparelAmount,analyticsHealthAmount,analyticsPersonalExpensesAmount,analyticsOtherAmount, monthSpentAmount;
 
     private RelativeLayout linearLayoutFood,linearLayoutTransport,linearLayoutFoodHouse,linearLayoutEntertainment,linearLayoutEducation;
-    private RelativeLayout linearLayoutCharity,linearLayoutApparel,linearLayoutHealth,linearLayoutPersonalExp,linearLayoutOther, linearLayoutAnalysis;
+    private RelativeLayout linearLayoutCharity,linearLayoutApparel,linearLayoutHealth,linearLayoutPersonalExp,linearLayoutOther;
 
     private AnyChartView anyChartView;
     private TextView progress_ratio_transport,progress_ratio_food,progress_ratio_house,progress_ratio_ent,progress_ratio_edu,progress_ratio_cha, progress_ratio_app,progress_ratio_hea,progress_ratio_per,progress_ratio_oth, monthRatioSpending;
@@ -63,17 +63,13 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
         setSupportActionBar(settingsToolbar);
         getSupportActionBar().setTitle("Week Analytics");
 
-
         mAuth = FirebaseAuth.getInstance();
         onlineUserId = mAuth.getCurrentUser().getUid();
-        expensesRef = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
         personalRef = FirebaseDatabase.getInstance().getReference("personal").child(onlineUserId);
-
 
         totalBudgetAmountTextView = findViewById(R.id.totalBudgetAmountTextView);
 
         monthSpentAmount = findViewById(R.id.monthSpentAmount);
-        linearLayoutAnalysis = findViewById(R.id.linearLayoutAnalysis);
         monthRatioSpending = findViewById(R.id.monthRatioSpending);
         monthRatioSpending_Image = findViewById(R.id.monthRatioSpending_Image);
 
@@ -123,16 +119,17 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
 
         anyChartView = findViewById(R.id.anyChartView);
 
-        getTotalWeekTransportExpense();
-        getTotalWeekFoodExpense();
-        getTotalWeekHouseExpenses();
-        getTotalWeekEntertainmentExpenses();
-        getTotalWeekEducationExpenses();
-        getTotalWeekCharityExpenses();
-        getTotalWeekApparelExpenses();
-        getTotalWeekHealthExpenses();
-        getTotalWeekPersonalExpenses();
-        getTotalWeekOtherExpenses();
+        getTotalTypeWeekExpense("Transport","weekTrans",analyticsTransportAmount,linearLayoutTransport);
+        getTotalTypeWeekExpense("Food","weekFood",analyticsFoodAmount,linearLayoutFood);
+        getTotalTypeWeekExpense("House","weekHouse",analyticsHouseExpensesAmount,linearLayoutFoodHouse);
+        getTotalTypeWeekExpense("Entertainment","weekEnt",analyticsEntertainmentAmount,linearLayoutEntertainment);
+        getTotalTypeWeekExpense("Education","weekEdu",analyticsEducationAmount,linearLayoutEducation);
+        getTotalTypeWeekExpense("Charity","weekCha",analyticsCharityAmount,linearLayoutCharity);
+        getTotalTypeWeekExpense("Apparel and Services","weekApp",analyticsApparelAmount,linearLayoutApparel);
+        getTotalTypeWeekExpense("Health","weekHea",analyticsHealthAmount,linearLayoutHealth);
+        getTotalTypeWeekExpense("Personal Expenses","weekPer",analyticsPersonalExpensesAmount,linearLayoutPersonalExp);
+        getTotalTypeWeekExpense("Other","weekOther",analyticsOtherAmount,linearLayoutOther);
+
         getTotalWeekSpending();
 
         new java.util.Timer().schedule(
@@ -146,13 +143,14 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
                 2000
         );
     }
-    private void getTotalWeekTransportExpense() {
+
+    private void getTotalTypeWeekExpense(String type, String child, TextView textView, RelativeLayout linearLayout) {
         MutableDateTime epoch = new MutableDateTime();
         epoch.setDate(0); //Set to Epoch time
         DateTime now = new DateTime();
         Weeks weeks = Weeks.weeksBetween(epoch, now);
 
-        String itemNweek = "Transport"+weeks.getWeeks();
+        String itemNweek = type+weeks.getWeeks();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
         Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
@@ -166,14 +164,14 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
                         Object total = map.get("amount");
                         int pTotal = Integer.parseInt(String.valueOf(total));
                         totalAmount += pTotal;
-                        analyticsTransportAmount.setText("Spent: " + totalAmount);
+                        textView.setText("Spent: " + totalAmount);
                     }
-                    personalRef.child("weekTrans").setValue(totalAmount);
+                    personalRef.child(child).setValue(totalAmount);
 
                 }
                 else {
-                    linearLayoutTransport.setVisibility(View.GONE);
-                    personalRef.child("weekTrans").setValue(0);
+                    linearLayout.setVisibility(View.GONE);
+                    personalRef.child(child).setValue(0);
                 }
 
             }
@@ -185,330 +183,7 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
         });
 
     }
-    private void getTotalWeekFoodExpense(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
 
-        String itemNweek = "Food"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsFoodAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekFood").setValue(totalAmount);
-                }else {
-                    linearLayoutFood.setVisibility(View.GONE);
-                    personalRef.child("weekFood").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekHouseExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "House"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsHouseExpensesAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekHouse").setValue(totalAmount);
-                }else {
-                    linearLayoutFoodHouse.setVisibility(View.GONE);
-                    personalRef.child("weekHouse").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekEntertainmentExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "Entertainment"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsEntertainmentAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekEnt").setValue(totalAmount);
-                }else {
-                    linearLayoutEntertainment.setVisibility(View.GONE);
-                    personalRef.child("weekEnt").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekEducationExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "Education"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsEducationAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekEdu").setValue(totalAmount);
-                }else {
-                    linearLayoutEducation.setVisibility(View.GONE);
-                    personalRef.child("weekEdu").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekCharityExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "Charity"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsCharityAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekCha").setValue(totalAmount);
-                }else {
-                    linearLayoutCharity.setVisibility(View.GONE);
-                    personalRef.child("weekCha").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekApparelExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "Apparel and Services"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsApparelAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekApp").setValue(totalAmount);
-                }else {
-                    linearLayoutApparel.setVisibility(View.GONE);
-                    personalRef.child("weekApp").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekHealthExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "Health"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsHealthAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekHea").setValue(totalAmount);
-                }else {
-                    linearLayoutHealth.setVisibility(View.GONE);
-                    personalRef.child("weekHea").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekPersonalExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "Personal Expenses"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsPersonalExpensesAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekPer").setValue(totalAmount);
-                }else {
-                    linearLayoutPersonalExp.setVisibility(View.GONE);
-                    personalRef.child("weekPer").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void getTotalWeekOtherExpenses(){
-        MutableDateTime epoch = new MutableDateTime();
-        epoch.setDate(0); //Set to Epoch time
-        DateTime now = new DateTime();
-        Weeks weeks = Weeks.weeksBetween(epoch, now);
-
-        String itemNweek = "Other"+weeks.getWeeks();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(onlineUserId);
-        Query query = reference.orderByChild("itemNweek").equalTo(itemNweek);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int totalAmount = 0;
-                    for (DataSnapshot ds :  snapshot.getChildren()) {
-                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
-                        Object total = map.get("amount");
-                        int pTotal = Integer.parseInt(String.valueOf(total));
-                        totalAmount += pTotal;
-                        analyticsOtherAmount.setText("Spent: " + totalAmount);
-                    }
-                    personalRef.child("weekOther").setValue(totalAmount);
-                }else {
-                    linearLayoutOther.setVisibility(View.GONE);
-                    personalRef.child("weekOther").setValue(0);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(WeeklyAnalyticsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     private void getTotalWeekSpending(){
         MutableDateTime epoch = new MutableDateTime();
         epoch.setDate(0); //Set to Epoch time
