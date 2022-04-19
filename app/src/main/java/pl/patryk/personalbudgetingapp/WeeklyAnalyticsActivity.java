@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -38,7 +39,6 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
 
     private Toolbar settingsToolbar;
 
-
     private FirebaseAuth mAuth;
     private String onlineUserId = "";
     private DatabaseReference personalRef;
@@ -53,6 +53,9 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
     private TextView progress_ratio_transport,progress_ratio_food,progress_ratio_house,progress_ratio_ent,progress_ratio_edu,progress_ratio_cha, progress_ratio_app,progress_ratio_hea,progress_ratio_per,progress_ratio_oth, monthRatioSpending;
     private ImageView status_Image_transport, status_Image_food,status_Image_house,status_Image_ent,status_Image_edu,status_Image_cha,status_Image_app,status_Image_hea,status_Image_per,status_Image_oth, monthRatioSpending_Image;
 
+    private int traTotal, foodTotal, houseTotal, entTotal, eduTotal, chaTotal, appTotal, heaTotal, perTotal, othTotal, monthTotalSpentAmount;
+
+    private int traRatio, foodRatio, houseRatio, entRatio, eduRatio, chaRatio, appRatio, heaRatio, perRatio, othRatio, monthTotalSpentAmountRatio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +132,6 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
         getTotalTypeWeekExpense("Health","weekHea",analyticsHealthAmount,linearLayoutHealth);
         getTotalTypeWeekExpense("Personal Expenses","weekPer",analyticsPersonalExpensesAmount,linearLayoutPersonalExp);
         getTotalTypeWeekExpense("Other","weekOther",analyticsOtherAmount,linearLayoutOther);
-
         getTotalWeekSpending();
 
         new java.util.Timer().schedule(
@@ -167,13 +169,11 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
                         textView.setText("Spent: " + totalAmount);
                     }
                     personalRef.child(child).setValue(totalAmount);
-
                 }
                 else {
                     linearLayout.setVisibility(View.GONE);
                     personalRef.child(child).setValue(0);
                 }
-
             }
 
             @Override
@@ -195,7 +195,6 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     int totalAmount = 0;
                     for (DataSnapshot ds :  dataSnapshot.getChildren()){
@@ -203,7 +202,6 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
                         Object total = map.get("amount");
                         int pTotal = Integer.parseInt(String.valueOf(total));
                         totalAmount+=pTotal;
-
                     }
                     totalBudgetAmountTextView.setText("Total week's spending: $ "+ totalAmount);
                     monthSpentAmount.setText("Total Spent: $ "+totalAmount);
@@ -219,80 +217,35 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
         });
     }
 
+    private int getTypeTotalExpanses(DataSnapshot snapshot,String child){
+        if (snapshot.hasChild(child))
+            return Integer.parseInt(snapshot.child(child).getValue().toString());
+        else
+            return 0;
+    }
+
+    private void getTotalExpanses(DataSnapshot snapshot){
+                    traTotal = getTypeTotalExpanses(snapshot,"weekTrans");
+                    foodTotal = getTypeTotalExpanses(snapshot,"weekFood");
+                    houseTotal = getTypeTotalExpanses(snapshot,"weekHouse");
+                    entTotal = getTypeTotalExpanses(snapshot,"weekEnt");
+                    eduTotal = getTypeTotalExpanses(snapshot,"weekEdu");
+                    chaTotal = getTypeTotalExpanses(snapshot,"weekCha");
+                    appTotal = getTypeTotalExpanses(snapshot,"weekApp");
+                    heaTotal = getTypeTotalExpanses(snapshot,"weekHea");
+                    perTotal = getTypeTotalExpanses(snapshot,"weekPer");
+                    othTotal = getTypeTotalExpanses(snapshot,"weekOther");
+                    monthTotalSpentAmount = getTypeTotalExpanses(snapshot,"week");
+    }
+
+
     private void loadGraph(){
         personalRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
 
-                    int traTotal;
-                    if (snapshot.hasChild("weekTrans")){
-                        traTotal = Integer.parseInt(snapshot.child("weekTrans").getValue().toString());
-                    }else {
-                        traTotal = 0;
-                    }
-
-                    int foodTotal;
-                    if (snapshot.hasChild("weekFood")){
-                        foodTotal = Integer.parseInt(snapshot.child("weekFood").getValue().toString());
-                    }else {
-                        foodTotal = 0;
-                    }
-
-                    int houseTotal;
-                    if (snapshot.hasChild("weekHouse")){
-                        houseTotal = Integer.parseInt(snapshot.child("weekHouse").getValue().toString());
-                    }else {
-                        houseTotal = 0;
-                    }
-
-                    int entTotal;
-                    if (snapshot.hasChild("weekEnt")){
-                        entTotal = Integer.parseInt(snapshot.child("weekEnt").getValue().toString());
-                    }else {
-                        entTotal=0;
-                    }
-
-                    int eduTotal;
-                    if (snapshot.hasChild("weekEdu")){
-                        eduTotal = Integer.parseInt(snapshot.child("weekEdu").getValue().toString());
-                    }else {
-                        eduTotal = 0;
-                    }
-
-                    int chaTotal;
-                    if (snapshot.hasChild("weekCha")){
-                        chaTotal = Integer.parseInt(snapshot.child("weekCha").getValue().toString());
-                    }else {
-                        chaTotal = 0;
-                    }
-
-                    int appTotal;
-                    if (snapshot.hasChild("weekApp")){
-                        appTotal = Integer.parseInt(snapshot.child("weekApp").getValue().toString());
-                    }else {
-                        appTotal = 0;
-                    }
-
-                    int heaTotal;
-                    if (snapshot.hasChild("weekHea")){
-                        heaTotal = Integer.parseInt(snapshot.child("weekHea").getValue().toString());
-                    }else {
-                        heaTotal =0;
-                    }
-
-                    int perTotal;
-                    if (snapshot.hasChild("weekPer")){
-                        perTotal = Integer.parseInt(snapshot.child("weekPer").getValue().toString());
-                    }else {
-                        perTotal=0;
-                    }
-                    int othTotal;
-                    if (snapshot.hasChild("weekOther")){
-                        othTotal = Integer.parseInt(snapshot.child("weekOther").getValue().toString());
-                    }else {
-                        othTotal = 0;
-                    }
+                    getTotalExpanses(snapshot);
 
                     Pie pie = AnyChart.pie();
                     List<DataEntry> data = new ArrayList<>();
@@ -307,13 +260,9 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
                     data.add(new ValueDataEntry("Personal", perTotal));
                     data.add(new ValueDataEntry("other", othTotal));
 
-
                     pie.data(data);
-
                     pie.title("Week Analytics");
-
                     pie.labels().position("outside");
-
                     pie.legend().title().enabled(true);
                     pie.legend().title()
                             .text("Items Spent On")
@@ -338,317 +287,86 @@ public class WeeklyAnalyticsActivity extends AppCompatActivity {
         });
     }
 
+    private void getRatios(DataSnapshot snapshot){
+                    traRatio = getTypeTotalExpanses(snapshot,"weekTransRatio");
+                    foodRatio = getTypeTotalExpanses(snapshot,"weekFoodRatio");
+                    houseRatio = getTypeTotalExpanses(snapshot,"weekHouseRatio");
+                    entRatio = getTypeTotalExpanses(snapshot,"weekEntRatio");
+                    eduRatio = getTypeTotalExpanses(snapshot,"weekEduRatio");
+                    chaRatio = getTypeTotalExpanses(snapshot,"weekCharRatio");
+                    appRatio = getTypeTotalExpanses(snapshot,"weekAppRatio");
+                    heaRatio = getTypeTotalExpanses(snapshot,"weekHealthRatio");
+                    perRatio = getTypeTotalExpanses(snapshot,"weekPerRatio");
+                    othRatio = getTypeTotalExpanses(snapshot,"othRatio");
+                    monthTotalSpentAmountRatio = getTypeTotalExpanses(snapshot,"weeklyBudget");
+    }
+
+    private void setSpentStatus(float percent, TextView typeSpending, ImageView typeSpendingImage,int ratio){
+        if (percent<50){
+            typeSpending.setText(percent+" %" +" used of "+ratio + ". Status:");
+            typeSpendingImage.setImageResource(R.drawable.green);
+        }else if (percent >= 50 && percent <100){
+            typeSpending.setText(percent+" %" +" used of "+ratio + ". Status:");
+            typeSpendingImage.setImageResource(R.drawable.brown);
+        }else {
+            typeSpending.setText(percent+" %" +" used of "+ratio + ". Status:");
+            typeSpendingImage.setImageResource(R.drawable.red);
+        }
+    }
+
     private void setStatusAndImageResource(){
         personalRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists() ){
 
-                    float traTotal;
-                    if (snapshot.hasChild("weekTrans")){
-                        traTotal = Integer.parseInt(snapshot.child("weekTrans").getValue().toString());
-                    }else {
-                        traTotal = 0;
+                    getTotalExpanses(snapshot);
+                    getRatios(snapshot);
+
+                    if(monthTotalSpentAmountRatio!=0) {
+                        float monthPercent = (monthTotalSpentAmount * 100 / monthTotalSpentAmountRatio);
+                        setSpentStatus(monthPercent,monthRatioSpending,monthRatioSpending_Image,monthTotalSpentAmountRatio);
                     }
-
-                    float foodTotal;
-                    if (snapshot.hasChild("weekFood")){
-                        foodTotal = Integer.parseInt(snapshot.child("weekFood").getValue().toString());
-                    }else {
-                        foodTotal = 0;
+                    if(traRatio!=0) {
+                        float transportPercent = (traTotal * 100 / traRatio);
+                        setSpentStatus(transportPercent, progress_ratio_transport, status_Image_transport,traRatio);
                     }
-
-                    float houseTotal;
-                    if (snapshot.hasChild("weekHouse")){
-                        houseTotal = Integer.parseInt(snapshot.child("weekHouse").getValue().toString());
-                    }else {
-                        houseTotal = 0;
+                    if(foodRatio!=0) {
+                        float foodPercent = (foodTotal * 100 / foodRatio);
+                        setSpentStatus(foodPercent, progress_ratio_food, status_Image_food,foodRatio);
                     }
-
-                    float entTotal;
-                    if (snapshot.hasChild("weekEnt")){
-                        entTotal = Integer.parseInt(snapshot.child("weekEnt").getValue().toString());
-                    }else {
-                        entTotal=0;
+                    if(houseRatio!=0) {
+                        float housePercent = (houseTotal * 100 / houseRatio);
+                        setSpentStatus(housePercent, progress_ratio_house, status_Image_house,houseRatio);
                     }
-
-                    float eduTotal;
-                    if (snapshot.hasChild("weekEdu")){
-                        eduTotal = Integer.parseInt(snapshot.child("weekEdu").getValue().toString());
-                    }else {
-                        eduTotal = 0;
+                    if(entRatio!=0) {
+                        float entPercent = (entTotal * 100 / entRatio);
+                        setSpentStatus(entPercent, progress_ratio_ent, status_Image_ent,entRatio);
                     }
-
-                    float chaTotal;
-                    if (snapshot.hasChild("weekCha")){
-                        chaTotal = Integer.parseInt(snapshot.child("weekCha").getValue().toString());
-                    }else {
-                        chaTotal = 0;
+                    if(eduRatio!=0) {
+                        float eduPercent = (eduTotal * 100 / eduRatio);
+                        setSpentStatus(eduPercent, progress_ratio_edu, status_Image_edu,eduRatio);
                     }
-
-                    float appTotal;
-                    if (snapshot.hasChild("weekApp")){
-                        appTotal = Integer.parseInt(snapshot.child("weekApp").getValue().toString());
-                    }else {
-                        appTotal = 0;
+                    if(chaRatio!=0) {
+                        float chaPercent = (chaTotal * 100 / chaRatio);
+                        setSpentStatus(chaPercent, progress_ratio_cha, status_Image_cha,chaRatio);
                     }
-
-                    float heaTotal;
-                    if (snapshot.hasChild("weekHea")){
-                        heaTotal = Integer.parseInt(snapshot.child("weekHea").getValue().toString());
-                    }else {
-                        heaTotal =0;
+                    if(appRatio!=0) {
+                        float appPercent = (appTotal * 100 / appRatio);
+                        setSpentStatus(appPercent, progress_ratio_app, status_Image_app,appRatio);
                     }
-
-                    float perTotal;
-                    if (snapshot.hasChild("weekPer")){
-                        perTotal = Integer.parseInt(snapshot.child("weekPer").getValue().toString());
-                    }else {
-                        perTotal=0;
+                    if(heaRatio!=0) {
+                        float heaPercent = (heaTotal * 100 / heaRatio);
+                        setSpentStatus(heaPercent, progress_ratio_hea, status_Image_hea,heaRatio);
                     }
-                    float othTotal;
-                    if (snapshot.hasChild("weekOther")){
-                        othTotal = Integer.parseInt(snapshot.child("weekOther").getValue().toString());
-                    }else {
-                        othTotal = 0;
+                    if(perRatio!=0) {
+                        float perPercent = (perTotal * 100 / perRatio);
+                        setSpentStatus(perPercent, progress_ratio_food, status_Image_food,perRatio);
                     }
-
-                    float monthTotalSpentAmount;
-                    if (snapshot.hasChild("week")){
-                        monthTotalSpentAmount = Integer.parseInt(snapshot.child("week").getValue().toString());
-                    }else {
-                        monthTotalSpentAmount = 0;
+                    if(othRatio!=0) {
+                        float otherPercent = (othTotal * 100 / othRatio);
+                        setSpentStatus(otherPercent, progress_ratio_oth, status_Image_oth,othRatio);
                     }
-
-
-
-                    float traRatio;
-                    if (snapshot.hasChild("weekTransRatio")){
-                        traRatio = Integer.parseInt(snapshot.child("weekTransRatio").getValue().toString());
-                    }else {
-                        traRatio=0;
-                    }
-
-                    float foodRatio;
-                    if (snapshot.hasChild("weekFoodRatio")){
-                        foodRatio = Integer.parseInt(snapshot.child("weekFoodRatio").getValue().toString());
-                    }else {
-                        foodRatio = 0;
-                    }
-
-                    float houseRatio;
-                    if (snapshot.hasChild("weekHouseRatio")){
-                        houseRatio = Integer.parseInt(snapshot.child("weekHouseRatio").getValue().toString());
-                    }else {
-                        houseRatio = 0;
-                    }
-
-                    float entRatio;
-                    if (snapshot.hasChild("weekEntRatio")){
-                        entRatio= Integer.parseInt(snapshot.child("weekEntRatio").getValue().toString());
-                    }else {
-                        entRatio = 0;
-                    }
-
-                    float eduRatio;
-                    if (snapshot.hasChild("weekEduRatio")){
-                        eduRatio= Integer.parseInt(snapshot.child("weekEduRatio").getValue().toString());
-                    }else {
-                        eduRatio=0;
-                    }
-
-                    float chaRatio;
-                    if (snapshot.hasChild("weekCharRatio")){
-                        chaRatio = Integer.parseInt(snapshot.child("weekCharRatio").getValue().toString());
-                    }else {
-                        chaRatio = 0;
-                    }
-
-                    float appRatio;
-                    if (snapshot.hasChild("weekAppRatio")){
-                        appRatio = Integer.parseInt(snapshot.child("weekAppRatio").getValue().toString());
-                    }else {
-                        appRatio =0;
-                    }
-
-                    float heaRatio;
-                    if (snapshot.hasChild("weekHealthRatio")){
-                        heaRatio = Integer.parseInt(snapshot.child("weekHealthRatio").getValue().toString());
-                    }else {
-                        heaRatio=0;
-                    }
-
-                    float perRatio;
-                    if (snapshot.hasChild("weekPerRatio")){
-                        perRatio = Integer.parseInt(snapshot.child("weekPerRatio").getValue().toString());
-                    }else {
-                        perRatio = 0;
-                    }
-
-                    float othRatio;
-                    if (snapshot.hasChild("weekOtherRatio")){
-                        othRatio = Integer.parseInt(snapshot.child("weekOtherRatio").getValue().toString());
-                    }else {
-                        othRatio=0;
-                    }
-
-                    float monthTotalSpentAmountRatio;
-                    if (snapshot.hasChild("weeklyBudget")){
-                        monthTotalSpentAmountRatio = Integer.parseInt(snapshot.child("weeklyBudget").getValue().toString());
-                    }else {
-                        monthTotalSpentAmountRatio =0;
-                    }
-
-                    float monthPercent = (monthTotalSpentAmount/monthTotalSpentAmountRatio)*100;
-                    if (monthPercent<50){
-                        monthRatioSpending.setText(monthPercent+" %" +" used of "+monthTotalSpentAmountRatio + ". Status:");
-                        monthRatioSpending_Image.setImageResource(R.drawable.green);
-                    }else if (monthPercent >= 50 && monthPercent <100){
-                        monthRatioSpending.setText(monthPercent+" %" +" used of "+monthTotalSpentAmountRatio + ". Status:");
-                        monthRatioSpending_Image.setImageResource(R.drawable.brown);
-                    }else {
-                        monthRatioSpending.setText(monthPercent+" %" +" used of "+monthTotalSpentAmountRatio + ". Status:");
-                        monthRatioSpending_Image.setImageResource(R.drawable.red);
-
-                    }
-
-
-
-                    float transportPercent = (traTotal/traRatio)*100;
-                    if (transportPercent<50){
-                        progress_ratio_transport.setText(transportPercent+" %" +" used of "+traRatio + ". Status:");
-                        status_Image_transport.setImageResource(R.drawable.green);
-                    }else if (transportPercent >= 50 && transportPercent <100){
-                        progress_ratio_transport.setText(transportPercent+" %" +" used of "+traRatio + ". Status:");
-                        status_Image_transport.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_transport.setText(transportPercent+" %" +" used of "+traRatio + ". Status:");
-                        status_Image_transport.setImageResource(R.drawable.red);
-
-                    }
-
-                    float foodPercent = (foodTotal/foodRatio)*100;
-                    if (foodPercent<50){
-                        progress_ratio_food.setText(foodPercent+" %" +" used of "+foodRatio + ". Status:");
-                        status_Image_food.setImageResource(R.drawable.green);
-                    }else if (foodPercent >= 50 && foodPercent <100){
-                        progress_ratio_food.setText(foodPercent+" %" +" used of "+foodRatio + ". Status:");
-                        status_Image_food.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_food.setText(foodPercent+" %" +" used of "+foodRatio + ". Status:");
-                        status_Image_food.setImageResource(R.drawable.red);
-
-                    }
-
-                    float housePercent = (houseTotal/houseRatio)*100;
-                    if (housePercent<50){
-                        progress_ratio_house.setText(housePercent+" %" +" used of "+houseRatio + ". Status:");
-                        status_Image_house.setImageResource(R.drawable.green);
-                    }else if (housePercent >= 50 && housePercent <100){
-                        progress_ratio_house.setText(housePercent+" %" +" used of "+houseRatio + ". Status:");
-                        status_Image_house.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_house.setText(housePercent+" %" +" used of "+houseRatio + ". Status:");
-                        status_Image_house.setImageResource(R.drawable.red);
-
-                    }
-
-                    float entPercent = (entTotal/entRatio)*100;
-                    if (entPercent<50){
-                        progress_ratio_ent.setText(entPercent+" %" +" used of "+entRatio + ". Status:");
-                        status_Image_ent.setImageResource(R.drawable.green);
-                    }else if (entPercent >= 50 && entPercent <100){
-                        progress_ratio_ent.setText(entPercent+" %" +" used of "+entRatio + ". Status:");
-                        status_Image_ent.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_ent.setText(entPercent+" %" +" used of "+entRatio + ". Status:");
-                        status_Image_ent.setImageResource(R.drawable.red);
-
-                    }
-
-                    float eduPercent = (eduTotal/eduRatio)*100;
-                    if (eduPercent<50){
-                        progress_ratio_edu.setText(eduPercent+" %" +" used of "+eduRatio + ". Status:");
-                        status_Image_edu.setImageResource(R.drawable.green);
-                    }
-                    else if (eduPercent >= 50 && eduPercent <100){
-                        progress_ratio_edu.setText(eduPercent+" %" +" used of "+eduRatio + ". Status:");
-                        status_Image_edu.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_edu.setText(eduPercent+" %" +" used of "+eduRatio + ". Status:");
-                        status_Image_edu.setImageResource(R.drawable.red);
-
-                    }
-
-                    float chaPercent = (chaTotal/chaRatio)*100;
-                    if (chaPercent<50){
-                        progress_ratio_cha.setText(chaPercent+" %" +" used of "+chaRatio + ". Status:");
-                        status_Image_cha.setImageResource(R.drawable.green);
-                    }else if (chaPercent >= 50 && chaPercent <100){
-                        progress_ratio_cha.setText(chaPercent+" %" +" used of "+chaRatio + ". Status:");
-                        status_Image_cha.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_cha.setText(chaPercent+" %" +" used of "+chaRatio + ". Status:");
-                        status_Image_cha.setImageResource(R.drawable.red);
-
-                    }
-
-                    float appPercent = (appTotal/appRatio)*100;
-                    if (appPercent<50){
-                        progress_ratio_app.setText(appPercent+" %" +" used of "+appRatio + ". Status:");
-                        status_Image_app.setImageResource(R.drawable.green);
-                    }else if (appPercent >= 50 && appPercent <100){
-                        progress_ratio_app.setText(appPercent+" %" +" used of "+appRatio + ". Status:");
-                        status_Image_app.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_app.setText(appPercent+" %" +" used of "+appRatio + ". Status:");
-                        status_Image_app.setImageResource(R.drawable.red);
-
-                    }
-
-                    float heaPercent = (heaTotal/heaRatio)*100;
-                    if (heaPercent<50){
-                        progress_ratio_hea.setText(heaPercent+" %" +" used of "+heaRatio + ". Status:");
-                        status_Image_hea.setImageResource(R.drawable.green);
-                    }
-                    else if (heaPercent >= 50 && heaPercent <100){
-                        progress_ratio_hea.setText(heaPercent+" %" +" used of "+heaRatio + ". Status:");
-                        status_Image_hea.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_hea.setText(heaPercent+" %" +" used of "+heaRatio + ". Status:");
-                        status_Image_hea.setImageResource(R.drawable.red);
-
-                    }
-
-
-                    float perPercent = (perTotal/perRatio)*100;
-                    if (perPercent<50){
-                        progress_ratio_per.setText(perPercent+" %" +" used of "+perRatio + " . Status:");
-                        status_Image_per.setImageResource(R.drawable.green);
-                    }else if (perPercent >= 50 && perPercent <100){
-                        progress_ratio_per.setText(perPercent+" %" +" used of "+perRatio + " . Status:");
-                        status_Image_per.setImageResource(R.drawable.brown);
-                    }
-                    else {
-                        progress_ratio_per.setText(perPercent+" %" +" used of "+perRatio + " . Status:");
-                        status_Image_per.setImageResource(R.drawable.red);
-                    }
-
-
-                    float otherPercent = (othTotal/othRatio)*100;
-                    if (otherPercent<50){
-                        progress_ratio_oth.setText(otherPercent+" %" +" used of "+othRatio + ". Status:");
-                        status_Image_oth.setImageResource(R.drawable.green);
-                    }
-                    else if (otherPercent >= 50 && otherPercent <100){
-                        progress_ratio_oth.setText(otherPercent+" %" +" used of "+othRatio + ". Status:");
-                        status_Image_oth.setImageResource(R.drawable.brown);
-                    }else {
-                        progress_ratio_oth.setText(otherPercent+" %" +" used of "+othRatio + ". Status:");
-                        status_Image_oth.setImageResource(R.drawable.red);
-
-                    }
-
                 }
                 else {
                     Toast.makeText(WeeklyAnalyticsActivity.this, "setStatusAndImageResource Errors", Toast.LENGTH_SHORT).show();
